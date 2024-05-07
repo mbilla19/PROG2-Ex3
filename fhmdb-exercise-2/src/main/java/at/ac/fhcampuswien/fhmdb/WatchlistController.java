@@ -37,15 +37,15 @@ public class WatchlistController {
     public JFXListView movieWatchlistView;
     private WatchlistRepository repository = new WatchlistRepository();
 
-    private final ClickEventHandler onAddToWatchlistClicked = (clickedItem, isWatchlistCell, addToWatchlistBtn) -> {
+    private final ClickEventHandler onAddToWatchlistClicked = (clickedItem, isWatchlistCell) -> {
         if (isWatchlistCell) {
             try {
                 Movie movie = (Movie)clickedItem;
                 repository.removeFromWatchlist(movie.getID());
                 FXMLLoader fxmlLoader = new FXMLLoader(FhmdbApplication.class.getResource("watchlist-view.fxml"));
                 Parent root = FXMLLoader.load(fxmlLoader.getLocation());
-                Scene scene = addToWatchlistBtn.getScene();
-                scene.setRoot(root);
+                //Scene scene = addToWatchlistBtn.getScene();
+                //scene.setRoot(root);
             } catch (SQLException e) {
                 MovieCell.showExceptionDialog(new DatabaseException("Error by deleting movies"));
             } catch (IOException e) {
@@ -80,7 +80,7 @@ public class WatchlistController {
         );
 
         movieWatchlistView.setItems(movies);
-        movieWatchlistView.setCellFactory(movieListView -> new MovieCell(true, onAddToWatchlistClicked));
+        movieWatchlistView.setCellFactory(movieListView -> new MovieCell(onAddToWatchlistClicked));
     }
 
     public void loadHomeView() {

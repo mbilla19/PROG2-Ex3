@@ -2,6 +2,7 @@ package repository;
 
 import at.ac.fhcampuswien.fhmdb.models.Movie;
 import com.j256.ormlite.dao.Dao;
+import database.DatabaseManager;
 import entities.MovieEntity;
 import entities.WatchlistMovieEntity;
 
@@ -11,18 +12,23 @@ import java.util.List;
 public class WatchlistRepository {
     private Dao<WatchlistMovieEntity,Long> dao;
 
+    public WatchlistRepository()
+    {
+        this.dao = DatabaseManager.getInstance().getWatchlistDao();
+    }
     public List<WatchlistMovieEntity> getWatchlist() throws SQLException {
         return dao.queryForAll();
     }
 
     public int addToWatchlist(WatchlistMovieEntity movie) throws SQLException {
+        if (dao == null)  this.dao = DatabaseManager.getInstance().getWatchlistDao();
         return dao.create(movie);
     }
 
     public int removeFromWatchlist(String apiId) throws SQLException {
-        List<WatchlistMovieEntity> movies = dao.queryForEq("apiId", apiId);
-        if (!movies.isEmpty()) {
-            dao.delete(movies);
+        List<WatchlistMovieEntity> watchListMovies = dao.queryForEq("apiId", apiId);
+        if (!watchListMovies.isEmpty()) {
+            dao.delete(watchListMovies);
         }
         return 0;
     }

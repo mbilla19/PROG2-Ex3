@@ -19,14 +19,13 @@ public class MovieCell extends ListCell<Movie> {
     private final Label genre = new Label();
     private final JFXButton detailBtn = new JFXButton("Show Details");
     private final JFXButton watchlistBtn = new JFXButton("Watchlist");
-    private final VBox layout = new VBox(title, detail, genre, detailBtn);
+    private final VBox layout = new VBox(title, detail, genre, detailBtn, watchlistBtn);
     private boolean collapsedDetails = true;
+    private boolean isWatchlistCell = true;
 
-    private final boolean isWatchlistCell;
-
-    public MovieCell(boolean isWatchlistCell, ClickEventHandler addToWatchlistClicked) {
+    public MovieCell(ClickEventHandler addToWatchlistClicked) {
         super();
-        this.isWatchlistCell = isWatchlistCell;
+
         // color scheme
         //
         detailBtn.setStyle("-fx-background-color: #f5c518;");
@@ -53,19 +52,24 @@ public class MovieCell extends ListCell<Movie> {
                 collapsedDetails = false;
                 detailBtn.setText("Hide Details");
             } else {
-                layout.getChildren().remove(4);
+                layout.getChildren().remove(5);
                 collapsedDetails = true;
                 detailBtn.setText("Show Details");
             }
             setGraphic(layout);
         });
 
-        if (isWatchlistCell){
-            watchlistBtn.setText("Remove");
-        } else watchlistBtn.setText("Watchlist");
-
         watchlistBtn.setOnMouseClicked(mouseEvent -> {
-            addToWatchlistClicked.onClick(getItem(), isWatchlistCell, watchlistBtn);
+            if (!this.isWatchlistCell){
+                this.isWatchlistCell = true;
+                addToWatchlistClicked.onClick(getItem(),isWatchlistCell);
+                watchlistBtn.setText("Remove");
+            } else {
+                this.isWatchlistCell = false;
+                watchlistBtn.setText("Watchlist");
+                addToWatchlistClicked.onClick(getItem(),isWatchlistCell);
+            }
+            setGraphic(layout);
         });
     }
 

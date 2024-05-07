@@ -64,7 +64,7 @@ public class HomeController implements Initializable {
     protected SortedState sortedState;
 
     private WatchlistRepository repository = new WatchlistRepository();
-    private final ClickEventHandler onAddToWatchlistClicked = (clickedItem, isWatchlistCell, watchlistBtn) -> {
+    private final ClickEventHandler onAddToWatchlistClicked = (clickedItem, isWatchlistCell) -> {
         if (isWatchlistCell) {
             try {
                 Movie movie = (Movie)clickedItem;
@@ -121,7 +121,7 @@ public class HomeController implements Initializable {
 
     public void initializeLayout() {
         movieListView.setItems(observableMovies);   // set the items of the listview to the observable list
-        movieListView.setCellFactory(movieListView -> new MovieCell(false,onAddToWatchlistClicked )); // apply custom cells to the listview
+        movieListView.setCellFactory(movieListView -> new MovieCell(onAddToWatchlistClicked )); // apply custom cells to the listview
 
         // genre combobox
         Object[] genres = Genre.values();   // get all genres
