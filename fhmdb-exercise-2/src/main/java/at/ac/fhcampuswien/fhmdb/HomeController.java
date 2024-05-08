@@ -9,7 +9,6 @@ import at.ac.fhcampuswien.fhmdb.ui.MovieCell;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXListView;
-import entities.WatchlistMovieEntity;
 import exceptions.DatabaseException;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -22,6 +21,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import repository.MovieRepository;
 import repository.WatchlistRepository;
 
 import java.io.IOException;
@@ -64,6 +64,7 @@ public class HomeController implements Initializable {
     protected SortedState sortedState;
 
     private WatchlistRepository repository = new WatchlistRepository();
+    private MovieRepository movieRepository = new MovieRepository();
     private final ClickEventHandler onAddToWatchlistClicked = (clickedItem, isWatchlistCell) -> {
         if (isWatchlistCell) {
             try {
@@ -96,6 +97,13 @@ public class HomeController implements Initializable {
 
     public void initializeState() {
         List<Movie> result = MovieAPI.getAllMovies();
+        if(!result.isEmpty()) {
+            try {
+                movieRepository.removeAll();
+                movieRepository.addAllMoviesList(result);
+            } catch (SQLException sqle ){
+            }
+        }
         setMovies(result);
         setMovieList(result);
         sortedState = SortedState.NONE;
@@ -187,8 +195,8 @@ public class HomeController implements Initializable {
         }
 
         return movies.stream().filter(movie ->
-                movie.getTitle().toLowerCase().contains(query.toLowerCase()) ||
-                movie.getDescription().toLowerCase().contains(query.toLowerCase()))
+                        movie.getTitle().toLowerCase().contains(query.toLowerCase()) ||
+                                movie.getDescription().toLowerCase().contains(query.toLowerCase()))
                 .toList();
     }
 

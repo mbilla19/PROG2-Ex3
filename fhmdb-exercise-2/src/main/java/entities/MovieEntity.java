@@ -142,7 +142,7 @@ public class MovieEntity {
             movieEntity.setApiID(movie.getID());
             movieEntity.setTitle(movie.getTitle());
             movieEntity.setDescription(movie.getDescription());
-            movieEntity.setGenres(genresToString(movie.getGenres())); // Hier müssen Sie sicherstellen, dass die genresToString Methode korrekt implementiert ist.
+            movieEntity.setGenres(genresToString(movie.getGenres())); // Hier mÃ¼ssen Sie sicherstellen, dass die genresToString Methode korrekt implementiert ist.
             movieEntity.setReleaseYear(movie.getReleaseYear());
             movieEntity.setImgUrl(movie.getImgUrl());
             movieEntity.setLengthInMinutes(movie.getLengthInMinutes());
@@ -152,15 +152,32 @@ public class MovieEntity {
         }
         return movieEntities;
     }
-    public Movie toMovies(List<MovieEntity> movieEntities) {
-        List<Genre> genres = Arrays.stream(this.genres.split(","))
-                .map(Genre::valueOf)
-                .collect(Collectors.toList());
-        return new Movie(apiID, title, description, genres, releaseYear, imgUrl, lengthInMinutes, rating);
+    //    public Movie toMovies(List<MovieEntity> movieEntities) {
+//        List<Genre> genres = Arrays.stream(this.genres.split(","))
+//                .map(Genre::valueOf)
+//                .collect(Collectors.toList());
+//        return new Movie(apiID, title, description, genres, releaseYear, imgUrl, lengthInMinutes, rating);
+//    }
+    public static List<Movie> toMovies(List<MovieEntity> movieEntities){
+        List<Movie> movies = new ArrayList<>();
+        for(MovieEntity me : movieEntities) {
+            if(me.genres==null)
+                me.setGenres("");
+            Movie movie = new Movie(me.apiID,me.title,me.description,
+                    Arrays.stream(me.genres.split(",")).filter(s -> !s.isEmpty()).map(Genre::valueOf).collect(Collectors.toList()),
+                    me.releaseYear,me.imgUrl,me.lengthInMinutes,me.rating);
+
+            //cannot load all data
+            movies.add(movie);
+        }
+        return movies;
     }
 
     public Movie toMovie() {
+        if(this.genres==null)
+            this.setGenres("");
         List<Genre> genres = Arrays.stream(this.genres.split(","))
+                .filter(s -> !s.isEmpty())  // Exclude empty strings
                 .map(Genre::valueOf)
                 .collect(Collectors.toList());
         return new Movie(apiID, title, description, genres, releaseYear, imgUrl, lengthInMinutes, rating);

@@ -14,7 +14,7 @@ import entities.WatchlistMovieEntity;
 import java.sql.SQLException;
 
 public class DatabaseManager {
-    public static final String DB_URL = "jdbc:h2:file: ./db/moviesDB";
+    public static final String DB_URL = "jdbc:h2:file:./db/moviesDB";
     public static final String username = "user";
     public static final String password = "pass";
 
@@ -65,6 +65,7 @@ public class DatabaseManager {
 
     private void createTables() throws SQLException {
         TableUtils.createTableIfNotExists(connectionSource, MovieEntity.class);
+        TableUtils.createTableIfNotExists(connectionSource, WatchlistMovieEntity.class);
     }
 
 

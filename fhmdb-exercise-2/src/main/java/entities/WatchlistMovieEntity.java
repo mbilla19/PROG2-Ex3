@@ -1,8 +1,8 @@
 package entities;
 
 import com.j256.ormlite.field.DatabaseField;
-import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
+import entities.MovieEntity;
 
 @DatabaseTable(tableName = "WatchlistMovie")
 public class WatchlistMovieEntity{
@@ -22,7 +22,9 @@ public class WatchlistMovieEntity{
         this.apiID = apiID;
         this.movie = movie;
     }
+    public WatchlistMovieEntity(){
 
+    }
 
     public long getId() {
         return id;

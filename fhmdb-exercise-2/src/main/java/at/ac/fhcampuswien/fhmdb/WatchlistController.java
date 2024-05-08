@@ -1,23 +1,22 @@
 package at.ac.fhcampuswien.fhmdb;
 
-import entities.MovieEntity;
-import exceptions.*;
-import at.ac.fhcampuswien.fhmdb.FhmdbApplication;
 import at.ac.fhcampuswien.fhmdb.models.ClickEventHandler;
 import at.ac.fhcampuswien.fhmdb.models.Movie;
 import at.ac.fhcampuswien.fhmdb.ui.MovieCell;
 import com.jfoenix.controls.JFXListView;
+import entities.MovieEntity;
 import entities.WatchlistMovieEntity;
+import exceptions.DatabaseException;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-
+import repository.WatchlistRepository;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -25,16 +24,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javafx.collections.ObservableList;
-import repository.WatchlistRepository;
-
 public class WatchlistController {
     @FXML
     public Button watchlistBtn;
     @FXML
     public VBox mainPane;
     @FXML
-    public JFXListView movieWatchlistView;
+    public JFXListView watchlistView;
     private WatchlistRepository repository = new WatchlistRepository();
 
     private final ClickEventHandler onAddToWatchlistClicked = (clickedItem, isWatchlistCell) -> {
@@ -79,8 +75,8 @@ public class WatchlistController {
                         .collect(Collectors.toList())
         );
 
-        movieWatchlistView.setItems(movies);
-        movieWatchlistView.setCellFactory(movieListView -> new MovieCell(onAddToWatchlistClicked));
+        watchlistView.setItems(movies);
+        watchlistView.setCellFactory(movieListView -> new MovieCell(onAddToWatchlistClicked));
     }
 
     public void loadHomeView() {
